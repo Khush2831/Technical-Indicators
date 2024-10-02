@@ -1,0 +1,18 @@
+// used for trend reversal market 
+def hma(data,period):
+ wma_1 = data['close'].rolling(period//2).apply(lambda x: \
+ np.sum(x * np.arange(1, period//2+1)) / np.sum(np.arange(1, period//2+1)), raw=True)
+ wma_2 = data['close'].rolling(period).apply(lambda x: \
+ np.sum(x * np.arange(1, period+1)) / np.sum(np.arange(1, period+1)), raw=True)
+ diff = 2 * wma_1 - wma_2
+ hma = diff.rolling(int(np.sqrt(period))).mean()
+ data['hma'] = hma
+ signals = []
+ for i in range(len(data)):
+        if(data['hma'][i] > data['sma'][i]):
+            signals.append(1)
+        elif(data['hma'][i] < data['sma'][i]):
+            signals.append(-1)
+        else:
+            signals.append(0)
+ return signals
