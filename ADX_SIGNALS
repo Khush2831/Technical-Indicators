@@ -1,0 +1,19 @@
+# ADX BASED SIGNAL GENERATION 
+# PERIOD = WINDOW FOR ADX GENERTAION 
+# WORKS IN TREND MARKET AND IN GENRAL ALSO 
+
+def adx(data,period):
+  ad = ta.adx(data['high'] , data['low'] , data['close'] , timeperiod=period)
+  data['adx'] = ad['adx_14']
+  data['+di'] = ad['dmp_14']
+  data['-di'] = ad['dmn_14']
+  signals = []
+  for i in range(len(data)):
+    if(data['+di'][i] > data['-di'][i] and data['adx'][i] >= 25):
+      signals.append(1)
+    elif(data['+di'][i] < data['-di'][i] and data['adx'][i] >= 25):
+      signals.append(-1)
+    else:
+      signals.append(0)
+  
+  return signals
